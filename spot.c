@@ -30,8 +30,13 @@ int main(int argc, char *argv[]){
 	char *deviceName, errbuf[ERRBUFF_SIZE];
 	pcap_t *handler; //dev handler
 
-	if (argv){
-		printf("You gave me a device already, lemme snoop... \n");
+	if (argc > 2){
+		printf("Too many arguments! You can either give me the name of the device you want to snoop or leave it empty so I can find ones. \n");
+		return -1;
+	}
+
+	if (argc == 2){
+		printf("I detect a device, lemme snoop... \n");
 
 		deviceName = argv[1];
 
