@@ -79,10 +79,11 @@ int main(int argc, char *argv[]){
 		scanf("%d" , &n);
 		deviceName = devs[n];
 
+		//At this point we don't need the allDevices list anymore so free it
+		pcap_freealldevs(allDevices);
 		}
 
-	//At this point we don't need the allDevices list anymore so free it
-	pcap_freealldevs(allDevices);
+
 	//Open the device to sniff
 	printf("Opening now... \n");
 	//TODO: Change the params on this
