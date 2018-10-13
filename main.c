@@ -27,7 +27,7 @@ int main(int argc, char *argv[]){
 
 	printf("Hello, are you here to look at some packets? \n");
 
-	char *deviceName;
+	char *deviceName, errbuf[ERRBUFF_SIZE];
 	pcap_t *handler; //dev handler
 
 	if (argv){
@@ -37,7 +37,7 @@ int main(int argc, char *argv[]){
 
 		//verify that the input is a given device 
 
-		printf("Device: %s\n", dev);
+		printf("Device: %s\n", deviceName);
 
 		
 	} else {
@@ -47,7 +47,7 @@ int main(int argc, char *argv[]){
 		pcap_if_t *allDevices, *device;
 
 		int deviceCount = 0;
-		char devs[100][100], errbuf[ERRBUFF_SIZE];
+		char devs[100][100];
 
 		//Can't find any devices
 		if (pcap_findalldevs(&allDevices, errbuf) < 0){
@@ -71,10 +71,11 @@ int main(int argc, char *argv[]){
 
 		if (deviceCount == 0){
 			printf("\nNo interfaces found! \n");
-			return;
+			return -1;
 			}
 
 		//Find a device to sniff
+		int n;
 		printf("Enter the number of the device you want to sniff : ");
 		scanf("%d" , &n);
 		deviceName = devs[n];
@@ -86,8 +87,8 @@ int main(int argc, char *argv[]){
 
 	//Open the device to sniff
 	printf("Opening now... \n");
-	//TODO: Change the params on this
-	if (handler = pcap_open_live(deviceName, 0, 0, errbuf) == NULL){
+	
+	if ((handler = pcap_open_live(deviceName, 1000, 1, 0, errbuf)) == NULL){
 		printf("Something happened and I couldn't open the device :( \n");
 		exit(2);
 	}
