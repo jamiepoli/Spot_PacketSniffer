@@ -59,7 +59,7 @@ int main(int argc, char *argv[]){
 			printf("Couldn't find any available devices! \n");
 			printf("Here's some error code: %s", errbuf);
 			exit(1);
-			}
+		}
 
 		//List devices
 		for(device = allDevices; device != NULL; device = device->next){
@@ -72,12 +72,12 @@ int main(int argc, char *argv[]){
 				printf(" (%s)\n", device->description);
 			else
 				printf(" (No description available for this device)\n");
-			}
+		}
 
 		if (deviceCount == 0){
 			printf("\nNo interfaces found! \n");
 			return -1;
-			}
+		}
 
 		//Find a device to sniff
 		int n;
@@ -87,7 +87,7 @@ int main(int argc, char *argv[]){
 
 		//At this point we don't need the allDevices list anymore so free it
 		pcap_freealldevs(allDevices);
-		}
+	}
 
 
 	//Open the device to sniff
@@ -98,8 +98,38 @@ int main(int argc, char *argv[]){
 		exit(2);
 	}
 
-	//Do some file stuff...
+	
 
+	//Ask if user wants to apply filters, then do so
+	printf("Currently, the opened device is on promisc mode by default. Did you want to apply filters?\n");
+	printf("Y/N");
+
+	char ans;
+	scanf("%d", &ans);
+
+	struct bpf_program fp;		/* The compiled filter */
+	char filter_exp[];	/* The filter expression */
+	bpf_u_int32 mask;		/* Our netmask */
+	bpf_u_int32 net;	
+
+	switch(ans){
+		case "Y":  
+		printf("Please specify the filter expression you want to apply. \n");
+		scanf("%d", filter_exp);
+		if (pcap_compile(handler, &fp, filter_exp, 0, net) == -1) {
+			fprintf(stderr, "Couldn't parse filter %s: %s\n", filter_exp, pcap_geterr(handler));
+			return(2);
+		}
+		if (pcap_setfilter(handle, &fp) == -1) {
+			fprintf(stderr, "Couldn't install filter %s: %s\n", filter_exp, pcap_geterr(handle));
+			return(2);
+		}
+		printf("Applied filter: %s", filter_exp);
+		break;
+		case "N": 
+		printf("No problem, moving forward! \n");
+		break;
+	}
 	//Process the packet recieved - user callback function
 
 }
