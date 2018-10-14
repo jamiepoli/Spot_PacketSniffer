@@ -25,7 +25,7 @@ FILE *f;
 
 int main(int argc, char *argv[]){
 
-	printf("Hello, are you here to look at some packets? \n");
+	printf("Woof! \n");
 
 	char *deviceName, errbuf[ERRBUFF_SIZE];
 	pcap_t *handler; //dev handler
@@ -47,7 +47,8 @@ int main(int argc, char *argv[]){
 		
 	} else {
 		//All available devices
-		printf("Searching for available devices to snoop... \n");
+		printf("SInce a device wasn't specified, I am gonna start snooping for some... \n");
+		printf("\n ******************** \n");
 
 		pcap_if_t *allDevices, *device;
 
@@ -64,7 +65,7 @@ int main(int argc, char *argv[]){
 		//List devices
 		for(device = allDevices; device != NULL; device = device->next){
 			deviceCount++;
-			printf("%d. %s", deviceCount, device->name);
+			printf("%d. || %s", deviceCount, device->name);
 			strcpy(devs[deviceCount], device->name);
 
 			//Check if the given device has a description attached to it
@@ -105,11 +106,11 @@ int main(int argc, char *argv[]){
 	
 
 	//Ask if user wants to apply filters, then do so
-	printf("Currently, the opened device is on promisc mode by default. Did you want to apply filters?\n");
-	printf("1 for yes / 2 for no");
+	printf("Currently, %s is on promisc mode by default. Did you want to apply filters?\n", deviceName);
+	printf("1 for yes / 2 for no : ");
 
-	char ans;
-	scanf("%s", &ans);
+	int ans;
+	scanf("%d", &ans);
 
 	struct bpf_program fp;		/* The compiled filter */
 	char *filter_exp;	/* The filter expression */
@@ -135,7 +136,11 @@ int main(int argc, char *argv[]){
 		break;
 		default:
 		printf("Couldn't read your input. NO filters applied. \n");
+		break;
 	}
+
+	printf("right now I would be processing some packets rn but atm this is not implemented. \n");
+	return 0;
 	//Process the packet recieved - user callback function
 
 }
