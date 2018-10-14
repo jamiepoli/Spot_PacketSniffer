@@ -86,7 +86,7 @@ int main(int argc, char *argv[]){
 		deviceName = devs[n];
 
 		//At this point we don't need the allDevices list anymore so free it
-		pcap_freealldevs(allDevices);
+		//pcap_freealldevs(allDevices);
 	}
 
 
@@ -94,10 +94,11 @@ int main(int argc, char *argv[]){
 	printf("Opening now... \n");
 
 	
-	handler = pcap_open_live(deviceName, 65000, 1, 0, errbuf);
+	handler = pcap_open_live(deviceName, 650536, 1, 0, errbuf);
 	
 	if (handler == NULL){
 		printf("Something happened and I couldn't open the device :( \n");
+		printf("%s", errbuf);
 		exit(2);
 	}
 
