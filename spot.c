@@ -12,7 +12,7 @@
 #include<netinet/ip.h> 
 
 void analyze_packet(u_char *handler, const struct pcap_pkthdr *pktHeader, const u_char *pkt);
-
+void print_ip(const u_char *buf, int size);
 
 
 /* ------ CONSTANTS ------ */
@@ -160,6 +160,34 @@ int main(int argc, char *argv[]){
 
 
 void analyze_packet(u_char *handler, const struct pcap_pkthdr *pktHeader, const u_char *pkt){
-	printf("NOT IMPLEMENTED YET\n" );
-	exit(1);
+	//int size = pktHeader->len;
+
+    //Get the IP Header part of this packet , excluding the ethernet header
+	//struct iphdr *ip = (struct iphdr*)(pkt + sizeof(struct ethhdr));
+}
+
+void print_ip(const u_char *buf, int size){
+	unsigned short iphdrlen;
+         
+    struct iphdr *iph = (struct iphdr *)(Buffer  + sizeof(struct ethhdr) );
+    iphdrlen =iph->ihl*4;
+     
+    memset(&source, 0, sizeof(source));
+    source.sin_addr.s_addr = iph->saddr;
+     
+    memset(&dest, 0, sizeof(dest));
+    dest.sin_addr.s_addr = iph->daddr;
+     
+    fprintf(logfile , "\n");
+    fprintf(logfile , "IP Header\n");
+    fprintf(logfile , "   |-IP Version        : %d\n",(unsigned int)iph->version);
+    fprintf(logfile , "   |-IP Header Length  : %d DWORDS or %d Bytes\n",(unsigned int)iph->ihl,((unsigned int)(iph->ihl))*4);
+    fprintf(logfile , "   |-Type Of Service   : %d\n",(unsigned int)iph->tos);
+    fprintf(logfile , "   |-IP Total Length   : %d  Bytes(Size of Packet)\n",ntohs(iph->tot_len));
+    fprintf(logfile , "   |-Identification    : %d\n",ntohs(iph->id));
+    fprintf(logfile , "   |-TTL      : %d\n",(unsigned int)iph->ttl);
+    fprintf(logfile , "   |-Protocol : %d\n",(unsigned int)iph->protocol);
+    fprintf(logfile , "   |-Checksum : %d\n",ntohs(iph->check));
+    fprintf(logfile , "   |-Source IP        : %s\n" , inet_ntoa(source.sin_addr) );
+    fprintf(logfile , "   |-Destination IP 
 }
