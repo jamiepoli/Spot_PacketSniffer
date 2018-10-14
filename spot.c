@@ -92,8 +92,11 @@ int main(int argc, char *argv[]){
 
 	//Open the device to sniff
 	printf("Opening now... \n");
+
 	
-	if ((handler = pcap_open_live(deviceName, 1000, 1, 0, errbuf)) == NULL){
+	handler = pcap_open_live(deviceName, 65000, 1, 0, errbuf);
+	
+	if (handler == NULL){
 		printf("Something happened and I couldn't open the device :( \n");
 		exit(2);
 	}
@@ -102,33 +105,35 @@ int main(int argc, char *argv[]){
 
 	//Ask if user wants to apply filters, then do so
 	printf("Currently, the opened device is on promisc mode by default. Did you want to apply filters?\n");
-	printf("Y/N");
+	printf("1 for yes / 2 for no");
 
 	char ans;
-	scanf("%d", &ans);
+	scanf("%s", &ans);
 
 	struct bpf_program fp;		/* The compiled filter */
-	char filter_exp[];	/* The filter expression */
+	char *filter_exp;	/* The filter expression */
 	bpf_u_int32 mask;		/* Our netmask */
 	bpf_u_int32 net;	
 
 	switch(ans){
-		case "Y":  
+		case 1:  
 		printf("Please specify the filter expression you want to apply. \n");
-		scanf("%d", filter_exp);
+		scanf("%s", filter_exp);
 		if (pcap_compile(handler, &fp, filter_exp, 0, net) == -1) {
 			fprintf(stderr, "Couldn't parse filter %s: %s\n", filter_exp, pcap_geterr(handler));
 			return(2);
 		}
-		if (pcap_setfilter(handle, &fp) == -1) {
-			fprintf(stderr, "Couldn't install filter %s: %s\n", filter_exp, pcap_geterr(handle));
+		if (pcap_setfilter(handler, &fp) == -1) {
+			fprintf(stderr, "Couldn't install filter %s: %s\n", filter_exp, pcap_geterr(handler));
 			return(2);
 		}
 		printf("Applied filter: %s", filter_exp);
 		break;
-		case "N": 
+		case 2: 
 		printf("No problem, moving forward! \n");
 		break;
+		default:
+		printf("Couldn't read your input. NO filters applied. \n");
 	}
 	//Process the packet recieved - user callback function
 
