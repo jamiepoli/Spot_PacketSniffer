@@ -86,7 +86,7 @@ int main(int argc, char *argv[]){
 		deviceName = devs[n];
 
 		//At this point we don't need the allDevices list anymore so free it
-		//pcap_freealldevs(allDevices);
+		pcap_freealldevs(allDevices);
 	}
 
 
