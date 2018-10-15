@@ -107,7 +107,7 @@ int main(int argc, char *argv[]){
 		exit(2);
 	}
 
-	f = fopen("file.tct". "");
+	f = fopen("log.txt", "w");
 
 
 	
@@ -117,10 +117,10 @@ int main(int argc, char *argv[]){
 	printf("1 for yes / 2 for no : ");
 
 	scanf("%d", &ans);
-
-	struct bpf_program fp;		/* The compiled filter */
-	char *filter_exp;	/* The filter expression */
-	bpf_u_int32 mask;		/* Our netmask */
+/*
+	struct bpf_program fp;	
+	char *filter_exp;	
+	bpf_u_int32 mask;		
 	bpf_u_int32 net;	
 
 	switch(ans){
@@ -145,6 +145,8 @@ int main(int argc, char *argv[]){
 		break;
 	}
 
+	*/
+
 	printf("How many packets do you want me to grab? (0 to grab packets continously, until an err occurs.) \n");
 	scanf("%d", &ans);
 
@@ -168,7 +170,7 @@ int main(int argc, char *argv[]){
 void analyze_packet(u_char *handler, const struct pcap_pkthdr *pktHeader, const u_char *pkt){
 	//int size = pktHeader->len;
 
-	int count = 0;
+	//int count = 0;
     //Get the IP Header part of this packet , excluding the ethernet header
 	//struct iphdr *ip = (struct iphdr*)(pkt + sizeof(struct ethhdr));
 
@@ -179,6 +181,7 @@ void analyze_packet(u_char *handler, const struct pcap_pkthdr *pktHeader, const 
 }
  
 void print_ip(const u_char *buf, int size){
+	printf("Printing ip...\n");
 	unsigned short iphdrlen;
          
     struct iphdr *iph = (struct iphdr *)(buf  + sizeof(struct ethhdr) );
@@ -192,6 +195,7 @@ void print_ip(const u_char *buf, int size){
      
     fprintf(f , "\n");
     fprintf(f , "IP Header\n");
+    printf("WHy");
     fprintf(f , "   |-IP Version        : %d\n",(unsigned int)iph->version);
     fprintf(f , "   |-IP Header Length  : %d DWORDS or %d Bytes\n",(unsigned int)iph->ihl,((unsigned int)(iph->ihl))*4);
     fprintf(f , "   |-Type Of Service   : %d\n",(unsigned int)iph->tos);
