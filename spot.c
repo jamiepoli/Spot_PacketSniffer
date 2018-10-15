@@ -156,10 +156,26 @@ int main(int argc, char *argv[]){
 		pcap_loop(handler, ans, analyze_packet, NULL);
 	}
 
+	return 0;
+
 }
 
 
 void analyze_packet(u_char *handler, const struct pcap_pkthdr *pktHeader, const u_char *pkt){
-	printf("NOT IMPLEMENTED YET\n" );
-	exit(1);
+	int headerSize = pktHeader->len;
+
+	//get IPheader, whithout the ethernet header - AKA grab the data but not the other link layer data that got encapsed into it
+	struct iphdr *ip = (struct *iphdr) (pkt + (sizeof(ethhdr)));
+
+
+	//count how many packets we grabbed
+	//Print out which protocol each packet is designated to 
+	//if there are more than 1 packet in a specific protocol, ALPHABETIZE THEM
+
+	//Ask user which packet they want to look at from the drop down menu of packets we just printed
+
+	//print that packet.
 }
+
+
+//Need a helper function to print out the ethernet and IP headers
