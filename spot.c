@@ -161,6 +161,8 @@ int main(int argc, char *argv[]){
 		pcap_loop(handler, ans, analyze_packet, NULL);
 	}
 
+	return 0;
+
 }
 
 
@@ -200,5 +202,5 @@ void print_ip(const u_char *buf, int size){
     fprintf(logfile , "   |-Protocol : %d\n",(unsigned int)iph->protocol);
     fprintf(logfile , "   |-Checksum : %d\n",ntohs(iph->check));
     fprintf(logfile , "   |-Source IP        : %s\n" , inet_ntoa(source.sin_addr) );
-    fprintf(logfile , "   |-Destination IP 
+
 }
