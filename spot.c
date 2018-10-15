@@ -111,6 +111,9 @@ int main(int argc, char *argv[]){
 		exit(2);
 	}
 
+	f = fopen("file.tct". "");
+
+
 	
 
 	//Ask if user wants to apply filters, then do so
@@ -178,7 +181,7 @@ void analyze_packet(u_char *handler, const struct pcap_pkthdr *pktHeader, const 
 	//STEP 1: Print the IP header
 	//STEP 2: Print specific protocol header
 }
-
+ 
 void print_ip(const u_char *buf, int size){
 	unsigned short iphdrlen;
          
