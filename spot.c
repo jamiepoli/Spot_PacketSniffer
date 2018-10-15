@@ -85,9 +85,14 @@ int main(int argc, char *argv[]){
 		}
 
 		//Find a device to sniff
-		
+		char input[1];
+		char* c, bad;
 		printf("Enter the number of the device you want to sniff : ");
-		scanf("%d" , &ans);
+		//scanf("%d" , &ans);
+		c = fgets(input, sizeof(input), stdin);
+		if (c == input){
+			ans = c;
+		} 
 		deviceName = devs[ans];
 
 		//At this point we don't need the allDevices list anymore so free it
