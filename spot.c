@@ -182,14 +182,21 @@ int main(int argc, char *argv[]){
 
 
 void analyze_packet(u_char *handler, const struct pcap_pkthdr *pktHeader, const u_char *pkt){
-	//int size = pktHeader->len;
+	int size = pktHeader->len;
 
     //Get the IP Header part of this packet , excluding the ethernet header
-	//struct iphdr *ip = (struct iphdr*)(pkt + sizeof(struct ethhdr));
+	struct iphdr *ip = (struct iphdr*)(pkt + sizeof(struct ethhdr));
 
-	print_ip(pkt, pktHeader->len);
 	//STEP 1: Print the IP header
+	print_ip(pkt, size);
+
 	//STEP 2: Print specific protocol header
+	int protocol = iph->protocol;
+	switch(protocol){
+		case 6:
+		//TCP
+		break;
+	}
 }
 
 void print_ip(const u_char *buf, int size){
