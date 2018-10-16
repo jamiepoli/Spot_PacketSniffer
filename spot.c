@@ -195,7 +195,6 @@ void print_ip(const u_char *buf, int size){
      
     fprintf(f , "\n");
     fprintf(f , "IP Header\n");
-    printf("WHy");
     fprintf(f , "   |-IP Version        : %d\n",(unsigned int)iph->version);
     fprintf(f , "   |-IP Header Length  : %d DWORDS or %d Bytes\n",(unsigned int)iph->ihl,((unsigned int)(iph->ihl))*4);
     fprintf(f , "   |-Type Of Service   : %d\n",(unsigned int)iph->tos);
