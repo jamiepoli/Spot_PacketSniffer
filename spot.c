@@ -204,4 +204,18 @@ void print_ip(const u_char *buf, int size, int count){
     fprintf(f , "   |-Checksum : %d\n",ntohs(iph->check));
     fprintf(f , "   |-Source IP        : %s\n" , inet_ntoa(source.sin_addr) );
 
+    FILE *temp;
+    char c;
+
+    temp = fopen("log.txt");
+
+
+    c = fgetc(temp);
+    while (c != EOF) 
+    { 
+        printf ("%c", c); 
+        c = fgetc(temp); 
+    } 
+
+
 }
