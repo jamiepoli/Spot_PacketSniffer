@@ -12,7 +12,7 @@
 #include<netinet/ip.h> 
 
 void analyze_packet(u_char *handler, const struct pcap_pkthdr *pktHeader, const u_char *pkt);
-void print_ip(const u_char *buf, int size);
+void print_ip(const u_char *buf, int size, int count);
 
 
 /* ------ CONSTANTS ------ */
@@ -22,7 +22,7 @@ int ERRBUFF_SIZE = 100;
 /* ------ GENERAL VARS ------ */
 FILE *f;
 
-
+struct sockaddr_in source,dest;
 
 
 int main(int argc, char *argv[]){
@@ -84,17 +84,10 @@ int main(int argc, char *argv[]){
 		}
 
 		//Find a device to sniff
-		char input[1];
-		char* c, bad;
+		
 		printf("Enter the number of the device you want to sniff : ");
-		//scanf("%d" , &ans);
-		c = fgets(input, sizeof(input), stdin);
-		if (c == input){
-			ans = c;
-		} 
-		deviceName = devs[ans];
-
-		//At this point we don't need the allDevices list anymore so free it
+		scanf("%d" , &ans);
+			//At this point we don't need the allDevices list anymore so free it
 		pcap_freealldevs(allDevices);
 	}
 
@@ -174,19 +167,20 @@ int main(int argc, char *argv[]){
 void analyze_packet(u_char *handler, const struct pcap_pkthdr *pktHeader, const u_char *pkt){
 	//int size = pktHeader->len;
 
-	//int count = 0;
+	int count = 0;
     //Get the IP Header part of this packet , excluding the ethernet header
 	//struct iphdr *ip = (struct iphdr*)(pkt + sizeof(struct ethhdr));
 
 	//STEP 0: Foreeach packet inc count
-	print_ip(pkt, pktHeader->len);
+	count++;
+	print_ip(pkt, pktHeader->len, count);
 	//STEP 1: Print the IP header
 	//STEP 2: Print specific protocol header
 }
  
-void print_ip(const u_char *buf, int size){
-	printf("Printing ip...\n");
-	unsigned short iphdrlen;
+void print_ip(const u_char *buf, int size, int count){
+    printf("Printing ip. Packet %d : \n", count);
+    unsigned short iphdrlen;
          
     struct iphdr *iph = (struct iphdr *)(buf  + sizeof(struct ethhdr) );
     iphdrlen =iph->ihl*4;
