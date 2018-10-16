@@ -202,6 +202,9 @@ void print_ip(const u_char *buf, int size, int count){
     fprintf(f , "   |-TTL      : %d\n",(unsigned int)iph->ttl);
     fprintf(f , "   |-Protocol : %d\n",(unsigned int)iph->protocol);
     fprintf(f , "   |-Checksum : %d\n",ntohs(iph->check));
-    fprintf(f , "   |-Source IP        : %s\n" , inet_ntoa(source.sin_addr) );
+    fprintf(f , "   |-Source IP        : %s\n" , inet_ntoa(source.sin_addr));
+    fprintf(f,  "   |-Destination IP   : %s\n" , inet_ntoa(dest.sin_addr) );
+
+
 
 }
