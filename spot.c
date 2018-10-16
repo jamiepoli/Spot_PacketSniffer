@@ -197,15 +197,15 @@ void print_ip(const u_char *buf, int size){
     memset(&dest, 0, sizeof(dest));
     dest.sin_addr.s_addr = iph->daddr;
      
-    fprintf(logfile , "\n");
-    fprintf(logfile , "IP Header\n");
-    fprintf(logfile , "   |-IP Version        : %d\n",(unsigned int)iph->version);
-    fprintf(logfile , "   |-IP Header Length  : %d DWORDS or %d Bytes\n",(unsigned int)iph->ihl,((unsigned int)(iph->ihl))*4);
-    fprintf(logfile , "   |-Type Of Service   : %d\n",(unsigned int)iph->tos);
-    fprintf(logfile , "   |-IP Total Length   : %d  Bytes(Size of Packet)\n",ntohs(iph->tot_len));
-    fprintf(logfile , "   |-Identification    : %d\n",ntohs(iph->id));
-    fprintf(logfile , "   |-TTL      : %d\n",(unsigned int)iph->ttl);
-    fprintf(logfile , "   |-Protocol : %d\n",(unsigned int)iph->protocol);
-    fprintf(logfile , "   |-Checksum : %d\n",ntohs(iph->check));
-    fprintf(logfile , "   |-Source IP        : %s\n" , inet_ntoa(source.sin_addr) );
+    fprintf(f , "\n");
+    fprintf(f , "IP Header\n");
+    fprintf(f , "   |-IP Version        : %d\n",(unsigned int)iph->version);
+    fprintf(f , "   |-IP Header Length  : %d DWORDS or %d Bytes\n",(unsigned int)iph->ihl,((unsigned int)(iph->ihl))*4);
+    fprintf(f , "   |-Type Of Service   : %d\n",(unsigned int)iph->tos);
+    fprintf(f , "   |-IP Total Length   : %d  Bytes(Size of Packet)\n",ntohs(iph->tot_len));
+    fprintf(f , "   |-Identification    : %d\n",ntohs(iph->id));
+    fprintf(f , "   |-TTL      : %d\n",(unsigned int)iph->ttl);
+    fprintf(f , "   |-Protocol : %d\n",(unsigned int)iph->protocol);
+    fprintf(f , "   |-Checksum : %d\n",ntohs(iph->check));
+    fprintf(f , "   |-Source IP        : %s\n" , inet_ntoa(source.sin_addr) );
 }
