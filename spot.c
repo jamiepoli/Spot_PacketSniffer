@@ -220,7 +220,18 @@ void print_ip(const u_char *buf, int size){
 	fprintf(f,  "   |-Destination IP   : %s\n" , inet_ntoa(dest.sin_addr) );
 
 
-
+	printf("\n");
+	printf("IP Header\n");
+	printf("   |-IP Version       : %d\n",(unsigned int)iph->version);
+	printf("   |-IP Header Length : %d DWORDS or %d Bytes\n",(unsigned int)iph->ihl,((unsigned int)(iph->ihl))*4);
+	printf("   |-Type Of Service  : %d\n",(unsigned int)iph->tos);
+	printf("   |-IP Total Length  : %d  Bytes(Size of Packet)\n",ntohs(iph->tot_len));
+	printf("   |-Identification   : %d\n",ntohs(iph->id));
+	printf("   |-TTL      		  : %d\n",(unsigned int)iph->ttl);
+	printf("   |-Protocol 		  : %d\n",(unsigned int)iph->protocol);
+	printf("   |-Checksum 		  : %d\n",ntohs(iph->check));
+	printf("   |-Source IP        : %s\n" , inet_ntoa(source.sin_addr));
+	printf("   |-Destination IP   : %s\n" , inet_ntoa(dest.sin_addr) );
 /*
 
 	FILE *temp;
