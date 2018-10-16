@@ -12,7 +12,7 @@
 #include<netinet/ip.h> 
 
 void analyze_packet(u_char *handler, const struct pcap_pkthdr *pktHeader, const u_char *pkt);
-void print_ip(const u_char *buf, int size, int count);
+void print_ip(const u_char *buf, int size);
 
 
 /* ------ CONSTANTS ------ */
@@ -24,10 +24,20 @@ FILE *f;
 
 struct sockaddr_in source,dest;
 
+/*
+   / \__
+  (    @\___
+  /         O
+ /   (_____/
+/_____/   U Wooof 
+*/
+
 
 int main(int argc, char *argv[]){
 
+
 	printf("Woof! \n");
+
 
 	char *deviceName, errbuf[ERRBUFF_SIZE];
 	pcap_t *handler; //dev handler
@@ -51,7 +61,8 @@ int main(int argc, char *argv[]){
 	} else {
 		//All available devices
 		printf("SInce a device wasn't specified, I am gonna start snooping for some... \n");
-		printf("\n ******************** \n");
+		printf("============\n");
+		printf("\n");
 
 		pcap_if_t *allDevices, *device;
 
@@ -84,7 +95,7 @@ int main(int argc, char *argv[]){
 		}
 
 		//Find a device to sniff
-		
+
 		printf("Enter the number of the device you want to sniff : ");
 		scanf("%d" , &ans);
 			//At this point we don't need the allDevices list anymore so free it
@@ -92,11 +103,14 @@ int main(int argc, char *argv[]){
 	}
 
 
-	//Open the device to sniff
-	printf("Opening now... \n");
 
-	
-	handler = pcap_open_live(deviceName, 650536, 1, 0, errbuf);
+	printf("Opening %s now! \n", deviceName);
+	printf("============\n");
+	printf("\n");
+
+
+
+	handler = pcap_open_live(deviceName, 655336, 1, 0, errbuf);
 	
 	if (handler == NULL){
 		printf("Something happened and I couldn't open the device :( \n");
@@ -106,8 +120,10 @@ int main(int argc, char *argv[]){
 
 	f = fopen("log.txt", "w");
 
+	if (f == NULL){
+		printf("Error creating the log text doc. \n");
+	}
 
-	
 
 	//Ask if user wants to apply filters, then do so
 	printf("Currently, %s is on promisc mode by default. Did you want to apply filters?\n", deviceName);
@@ -157,6 +173,7 @@ int main(int argc, char *argv[]){
 	} else {
 		printf("I will sniff [%d] packets.\n", ans);
 		pcap_loop(handler, ans, analyze_packet, NULL);
+		printf("Analyzed and put packet contents in log.txt :)\n");
 	}
 
 	return 0;
@@ -167,58 +184,56 @@ int main(int argc, char *argv[]){
 void analyze_packet(u_char *handler, const struct pcap_pkthdr *pktHeader, const u_char *pkt){
 	//int size = pktHeader->len;
 
-	int count = 0;
     //Get the IP Header part of this packet , excluding the ethernet header
 	//struct iphdr *ip = (struct iphdr*)(pkt + sizeof(struct ethhdr));
 
-	//STEP 0: Foreeach packet inc count
-	count++;
-	print_ip(pkt, pktHeader->len, count);
+	print_ip(pkt, pktHeader->len);
 	//STEP 1: Print the IP header
 	//STEP 2: Print specific protocol header
 }
- 
-void print_ip(const u_char *buf, int size, int count){
-    printf("Printing ip. Packet %d : \n", count);
-    unsigned short iphdrlen;
-         
-    struct iphdr *iph = (struct iphdr *)(buf  + sizeof(struct ethhdr) );
-    iphdrlen =iph->ihl*4;
-     
-    memset(&source, 0, sizeof(source));
-    source.sin_addr.s_addr = iph->saddr;
-     
-    memset(&dest, 0, sizeof(dest));
-    dest.sin_addr.s_addr = iph->daddr;
-    
 
-    fprintf(f , "\n");
-    fprintf(f , "IP Header\n");
-    fprintf(f , "   |-IP Version        : %d\n",(unsigned int)iph->version);
-    fprintf(f , "   |-IP Header Length  : %d DWORDS or %d Bytes\n",(unsigned int)iph->ihl,((unsigned int)(iph->ihl))*4);
-    fprintf(f , "   |-Type Of Service   : %d\n",(unsigned int)iph->tos);
-    fprintf(f , "   |-IP Total Length   : %d  Bytes(Size of Packet)\n",ntohs(iph->tot_len));
-    fprintf(f , "   |-Identification    : %d\n",ntohs(iph->id));
-    fprintf(f , "   |-TTL      : %d\n",(unsigned int)iph->ttl);
-    fprintf(f , "   |-Protocol : %d\n",(unsigned int)iph->protocol);
-    fprintf(f , "   |-Checksum : %d\n",ntohs(iph->check));
-    fprintf(f , "   |-Source IP        : %s\n" , inet_ntoa(source.sin_addr));
-    fprintf(f,  "   |-Destination IP   : %s\n" , inet_ntoa(dest.sin_addr) );
+void print_ip(const u_char *buf, int size){
+
+	unsigned short iphdrlen;
+
+	struct iphdr *iph = (struct iphdr *)(buf  + sizeof(struct ethhdr) );
+	iphdrlen =iph->ihl*4;
+
+	memset(&source, 0, sizeof(source));
+	source.sin_addr.s_addr = iph->saddr;
+
+	memset(&dest, 0, sizeof(dest));
+	dest.sin_addr.s_addr = iph->daddr;
 
 
+	fprintf(f , "\n");
+	fprintf(f , "IP Header\n");
+	fprintf(f , "   |-IP Version        : %d\n",(unsigned int)iph->version);
+	fprintf(f , "   |-IP Header Length  : %d DWORDS or %d Bytes\n",(unsigned int)iph->ihl,((unsigned int)(iph->ihl))*4);
+	fprintf(f , "   |-Type Of Service   : %d\n",(unsigned int)iph->tos);
+	fprintf(f , "   |-IP Total Length   : %d  Bytes(Size of Packet)\n",ntohs(iph->tot_len));
+	fprintf(f , "   |-Identification    : %d\n",ntohs(iph->id));
+	fprintf(f , "   |-TTL      : %d\n",(unsigned int)iph->ttl);
+	fprintf(f , "   |-Protocol : %d\n",(unsigned int)iph->protocol);
+	fprintf(f , "   |-Checksum : %d\n",ntohs(iph->check));
+	fprintf(f , "   |-Source IP        : %s\n" , inet_ntoa(source.sin_addr));
+	fprintf(f,  "   |-Destination IP   : %s\n" , inet_ntoa(dest.sin_addr) );
 
-    FILE *temp;
-    char c;
-
-    temp = fopen("log.txt");
 
 
-    c = fgetc(temp);
-    while (c != EOF) 
-    { 
-        printf ("%c", c); 
-        c = fgetc(temp); 
-    } 
+/*
 
+	FILE *temp;
+	char c;
+
+	temp = fopen("log.txt", "r");
+
+
+	c = fgetc(temp);
+	printf ("%c", c); 
+
+	fclose(temp);
+
+*/
 
 }
