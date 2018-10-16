@@ -21,7 +21,6 @@ int ERRBUFF_SIZE = 100;
 
 /* ------ GENERAL VARS ------ */
 FILE *f;
-struct sockaddr_in source, dest;
 
 
 
@@ -85,9 +84,14 @@ int main(int argc, char *argv[]){
 		}
 
 		//Find a device to sniff
+		char input[1];
+		char* c, bad;
 		printf("Enter the number of the device you want to sniff : ");
-		scanf("%d" , &ans);
-
+		//scanf("%d" , &ans);
+		c = fgets(input, sizeof(input), stdin);
+		if (c == input){
+			ans = c;
+		} 
 		deviceName = devs[ans];
 
 		//At this point we don't need the allDevices list anymore so free it
@@ -192,7 +196,7 @@ void print_ip(const u_char *buf, int size){
      
     memset(&dest, 0, sizeof(dest));
     dest.sin_addr.s_addr = iph->daddr;
-     
+    
     fprintf(f , "\n");
     fprintf(f , "IP Header\n");
     fprintf(f , "   |-IP Version        : %d\n",(unsigned int)iph->version);
