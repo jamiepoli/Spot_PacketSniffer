@@ -41,7 +41,7 @@ int main(int argc, char *argv[]){
 
 	char *deviceName, errbuf[ERRBUFF_SIZE];
 	pcap_t *handler; //dev handler
-	int ans; //for user input
+	int ans[1]; //for user input
 
 	if (argc > 2){
 		printf("Too many arguments! You can either give me the name of the device you want to snoop or leave it empty so I can find ones. \n");
@@ -95,10 +95,9 @@ int main(int argc, char *argv[]){
 		}
 
 		//Find a device to sniff
-
 		printf("Enter the number of the device you want to sniff : ");
-		scanf("%d" , &ans);
-			//At this point we don't need the allDevices list anymore so free it
+		scanf("%d" , ans[0]);
+		//At this point we don't need the allDevices list anymore so free it
 		pcap_freealldevs(allDevices);
 	}
 
@@ -118,26 +117,39 @@ int main(int argc, char *argv[]){
 		exit(2);
 	}
 
-	f = fopen("log.txt", "w");
+	printf("Would you like to create a text doc and log packet information into it? \n");
+	printf("\n1. No\n");
+	printf("\n2. Yes\n");
+	scanf("%d", ans[0]);
 
-	if (f == NULL){
-		printf("Error creating the log text doc. \n");
+	if (ans[0] == 2){
+		printf("\n ");
+		printf("Creating the log file now...\n");
+		f = fopen("log.txt", "w");
+
+		if (f == NULL){
+			printf("Error creating the log text doc. \n");
+			exit(1);
+		}
 	}
-
 
 	//Ask if user wants to apply filters, then do so
 	printf("Currently, %s is on promisc mode by default. Did you want to apply filters?\n", deviceName);
-	printf("1 for yes / 2 for no : ");
+	printf("\n1. No\n");
+	printf("\n2. Yes\n");
 
-	scanf("%d", &ans);
-/*
+	scanf("%d", ans[0]);
+
 	struct bpf_program fp;	
 	char *filter_exp;	
 	bpf_u_int32 mask;		
 	bpf_u_int32 net;	
 
-	switch(ans){
+	switch(ans[0]){
 		case 1:  
+		printf("No problem, moving forward! \n");
+		break;
+		case 2:
 		printf("Please specify the filter expression you want to apply. \n");
 		scanf("%s", filter_exp);
 		if (pcap_compile(handler, &fp, filter_exp, 0, net) == -1) {
@@ -149,26 +161,24 @@ int main(int argc, char *argv[]){
 			return(2);
 		}
 		printf("Applied filter: %s", filter_exp);
-		break;
-		case 2: 
-		printf("No problem, moving forward! \n");
+
 		break;
 		default:
 		printf("Couldn't read your input. NO filters applied. \n");
 		break;
 	}
 
-	*/
+
 
 	printf("How many packets do you want me to grab? (0 to grab packets continously, until an err occurs.) \n");
-	scanf("%d", &ans);
+	scanf("%d", ans[0]);
 
-	if(ans < 0){
+	if(ans[0] < 0){
 		printf("Invalid input. \n");
 		//return...?
 	}
 
-	if (ans == 0){
+	if (ans[0] == 0){
 		pcap_loop(handler, -1, analyze_packet, NULL);
 	} else {
 		printf("I will sniff [%d] packets.\n", ans);
